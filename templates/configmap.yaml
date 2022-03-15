@@ -10,3 +10,4 @@ data:
   db-password: {{ required "Must provide ottertune.dbPassword" .Values.ottertune.dbPassword | quote }}
   db-key: {{ required "Must provide ottertune.dbKey" .Values.ottertune.dbKey | quote }}
   org-id: {{ required "Must provide ottertune.orgID" .Values.ottertune.orgID | quote }}
+  server-url: {{ .Values.serverUrlOverride | quote }}

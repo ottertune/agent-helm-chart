@@ -69,6 +69,13 @@ spec:
               configMapKeyRef:
                 name: {{ include "..configmapName" . }}
                 key: "org-id"
+  {{- if not (empty .Values.serverUrlOverride) }}
+          - name: "OTTERTUNE_OVERRIDE_SERVER_URL"
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "server-url"
+  {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

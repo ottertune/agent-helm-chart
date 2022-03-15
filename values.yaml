@@ -44,3 +44,6 @@ affinity: {}
 podAnnotations: {}
 podSecurityContext: {}
 securityContext: {}
+
+# Allow users to override the Server URL in case of on-prem deployments.
+serverUrlOverride: ""
