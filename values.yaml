@@ -4,6 +4,26 @@ image:
   repository: "public.ecr.aws/ottertune/agent"
   pullPolicy: "IfNotPresent"
 
+
+aws:
+  # TODO: Write Helper to detect is AccessKey and SecretAccessKey are provided.
+  # Either both must be provided or neither must be provided.
+  # Add an IF block around their environment variables if they're not
+  # provided.
+  region: ""
+  accessKeyID: ""
+  secretAccessKey: ""
+
+# Some of these values are passed into a Configmap and others are stored
+# in a secret.
+ottertune:
+  dbIdentifier: ""
+  dbUsername: ""
+  dbPassword: ""
+  apiKey: ""
+  dbKey: ""
+  orgID: ""
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -14,7 +34,6 @@ serviceAccount:
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
 # Resources are left blank so they can be a conscious choice for the user.

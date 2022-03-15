@@ -36,22 +36,39 @@ spec:
           env:
           - name: "AWS_REGION"
             value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
+          {{- if eq (include "..awsCredsEnabled" . ) "true" }}
           - name: "AWS_ACCESS_KEY_ID"
-            value: {{ required "Must provide aws.accessKeyID" .Values.aws.accessKeyID | quote }}
+            value: {{ .Values.aws.accessKeyID | quote }}
           - name: "AWS_SECRET_ACCESS_KEY"
-            value: {{ required "Must provide aws.secretAccessKey" .Values.aws.secretAccessKey | quote }}
+            value: {{ .Values.aws.secretAccessKey | quote }}
+          {{- end}}
           - name: "OTTERTUNE_DB_IDENTIFIER"
-            value: {{ required "Must provide dbIdentifier" .Values.dbIdentifier | quote }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "db-identifier"
           - name: "OTTERTUNE_DB_USERNAME"
-            value: {{ required "Must provide dbUsername" .Values.dbUsername | quote }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "db-username"
           - name: "OTTERTUNE_DB_PASSWORD"
-            value: {{ required "Must provide dbPassword" .Values.dbPassword | quote }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "db-password"
           - name: "OTTERTUNE_API_KEY"
-            value: {{ required "Must provide ottertuneAPIKey" .Values.ottertuneAPIKey | quote }}
+            value: {{ required "Must provide ottertuneAPIKey" .Values.ottertune.apiKey | quote }}
           - name: "OTTERTUNE_DB_KEY"
-            value: {{ required "Must provide ottertuneDBKey" .Values.ottertuneDBKey | quote }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "db-key"
           - name: "OTTERTUNE_ORG_ID"
-            value: {{ required "Must provide ottertuneOrgID" .Values.ottertuneOrgID | quote }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "org-id"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
