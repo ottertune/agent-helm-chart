@@ -37,7 +37,7 @@ spec:
           - name: "AWS_REGION"
             value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
           - name: "AWS_ACCESS_KEY_ID"
-            value: {{ required "Must provide aws.accessKeyId" .Values.aws.accessKeyID | quote }}
+            value: {{ required "Must provide aws.accessKeyID" .Values.aws.accessKeyID | quote }}
           - name: "AWS_SECRET_ACCESS_KEY"
             value: {{ required "Must provide aws.secretAccessKey" .Values.aws.secretAccessKey | quote }}
           - name: "OTTERTUNE_DB_IDENTIFIER"
