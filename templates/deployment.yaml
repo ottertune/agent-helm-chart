@@ -33,6 +33,25 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: "AWS_REGION"
+            value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
+          - name: "AWS_ACCESS_KEY_ID"
+            value: {{ required "Must provide aws.accessKeyId" .Values.aws.accessKeyID | quote }}
+          - name: "AWS_SECRET_ACCESS_KEY"
+            value: {{ required "Must provide aws.secretAccessKey" .Values.aws.secretAccessKey | quote }}
+          - name: "OTTERTUNE_DB_IDENTIFIER"
+            value: {{ required "Must provide dbIdentifier" .Values.dbIdentifier | quote }}
+          - name: "OTTERTUNE_DB_USERNAME"
+            value: {{ required "Must provide dbUsername" .Values.dbUsername | quote }}
+          - name: "OTTERTUNE_DB_PASSWORD"
+            value: {{ required "Must provide dbPassword" .Values.dbPassword | quote }}
+          - name: "OTTERTUNE_API_KEY"
+            value: {{ required "Must provide ottertuneAPIKey" .Values.ottertuneAPIKey | quote }}
+          - name: "OTTERTUNE_DB_KEY"
+            value: {{ required "Must provide ottertuneDBKey" .Values.ottertuneDBKey | quote }}
+          - name: "OTTERTUNE_ORG_ID"
+            value: {{ required "Must provide ottertuneOrgID" .Values.ottertuneOrgID | quote }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
