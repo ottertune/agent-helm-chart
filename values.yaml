@@ -4,7 +4,6 @@ image:
   repository: "public.ecr.aws/ottertune/agent"
   pullPolicy: "IfNotPresent"
 
-
 aws:
   region: ""
   # Either both AccessKeyID or SecretAccessKey must be provided or neither.
