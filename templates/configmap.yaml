@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "..configmapName" . | quote }}
+  labels:
+    {{- include "..labels" . | nindent 4 }}
+data:
+  db-identifier: {{ required "Must provide ottertune.dbIdentifier" .Values.ottertune.dbIdentifier | quote }}
+  db-username: {{ required "Must provide ottertune.dbUsername" .Values.ottertune.dbUsername | quote }}
+  db-password: {{ required "Must provide ottertune.dbPassword" .Values.ottertune.dbPassword | quote }}
+  db-key: {{ required "Must provide ottertune.dbKey" .Values.ottertune.dbKey | quote }}
+  org-id: {{ required "Must provide ottertune.orgID" .Values.ottertune.orgID | quote }}

@@ -60,3 +60,29 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Provides the name of the Configmap.
+*/}}
+{{- define "..configmapName" -}}
+{{ include "..fullname" .}}-configmap
+{{- end }}
+
+{{/*
+Returns True if the user provided AWS credentials.
+Fail when secret key is set but access id isn't.
+Fail when access id is set but secret key isn't.
+*/}}
+{{- define "..awsCredsEnabled" -}}
+{{- $accessID := .Values.aws.accessKeyID | trim -}}
+{{- $secretKey := .Values.aws.secretAccessKey | trim -}}
+{{- $accessIDEmpty := empty $accessID -}}
+{{- $secretKeyEmpty := empty $secretKey -}}
+{{- if and $accessIDEmpty (not $secretKeyEmpty) -}}
+{{- fail "You provided an AWS Secret Key, but no Access Key ID. You must provide either both or neither." -}}
+{{- end }}
+{{- if and (not $accessIDEmpty) $secretKeyEmpty -}}
+{{- fail "You provided an AWS Access Key ID, but no Secret Access Key. You must provide either both or neither." -}}
+{{- end -}}
+{{- not (and $accessIDEmpty $secretKeyEmpty) -}}
+{{- end -}}
