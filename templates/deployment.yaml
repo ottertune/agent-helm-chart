@@ -36,7 +36,6 @@ spec:
           env:
           - name: "AWS_REGION"
             value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
-          # {{- include "..awsCredsEnabled" . -}}
           {{- if eq (include "..awsCredsEnabled" . ) "true" }}
           - name: "AWS_ACCESS_KEY_ID"
             value: {{ .Values.aws.accessKeyID | quote }}
@@ -70,6 +69,13 @@ spec:
               configMapKeyRef:
                 name: {{ include "..configmapName" . }}
                 key: "org-id"
+  {{- if not (empty .Values.serverUrlOverride) }}
+          - name: "OTTERTUNE_OVERRIDE_SERVER_URL"
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "..configmapName" . }}
+                key: "server-url"
+  {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
