@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "..fullname" . }}
+  labels:
+    {{- include "..labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "..selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "..selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "..serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: "AWS_REGION"
+            value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
+          - name: "AWS_ACCESS_KEY_ID"
+            value: {{ required "Must provide aws.accessKeyID" .Values.aws.accessKeyID | quote }}
+          - name: "AWS_SECRET_ACCESS_KEY"
+            value: {{ required "Must provide aws.secretAccessKey" .Values.aws.secretAccessKey | quote }}
+          - name: "OTTERTUNE_DB_IDENTIFIER"
+            value: {{ required "Must provide dbIdentifier" .Values.dbIdentifier | quote }}
+          - name: "OTTERTUNE_DB_USERNAME"
+            value: {{ required "Must provide dbUsername" .Values.dbUsername | quote }}
+          - name: "OTTERTUNE_DB_PASSWORD"
+            value: {{ required "Must provide dbPassword" .Values.dbPassword | quote }}
+          - name: "OTTERTUNE_API_KEY"
+            value: {{ required "Must provide ottertuneAPIKey" .Values.ottertuneAPIKey | quote }}
+          - name: "OTTERTUNE_DB_KEY"
+            value: {{ required "Must provide ottertuneDBKey" .Values.ottertuneDBKey | quote }}
+          - name: "OTTERTUNE_ORG_ID"
+            value: {{ required "Must provide ottertuneOrgID" .Values.ottertuneOrgID | quote }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
