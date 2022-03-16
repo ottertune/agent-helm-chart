@@ -36,6 +36,7 @@ spec:
           env:
           - name: "AWS_REGION"
             value: {{ required "Must provide aws.region" .Values.aws.region | quote }}
+          # {{- include "..awsCredsEnabled" . -}}
           {{- if eq (include "..awsCredsEnabled" . ) "true" }}
           - name: "AWS_ACCESS_KEY_ID"
             value: {{ .Values.aws.accessKeyID | quote }}

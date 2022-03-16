@@ -6,11 +6,8 @@ image:
 
 
 aws:
-  # TODO: Write Helper to detect is AccessKey and SecretAccessKey are provided.
-  # Either both must be provided or neither must be provided.
-  # Add an IF block around their environment variables if they're not
-  # provided.
   region: ""
+  # Either both AccessKeyID or SecretAccessKey must be provided or neither.
   accessKeyID: ""
   secretAccessKey: ""
 

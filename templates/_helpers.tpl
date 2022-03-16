@@ -78,13 +78,11 @@ Fail when access id is set but secret key isn't.
 {{- $secretKey := .Values.aws.secretAccessKey | trim -}}
 {{- $accessIDEmpty := empty $accessID -}}
 {{- $secretKeyEmpty := empty $secretKey -}}
-{{- $accessIDNotEmpty := not $accessIDEmpty -}}
-{{- $secretKeyNotEmpty := not $secretKeyEmpty -}}
-{{- if and $accessIDEmpty $secretKeyNotEmpty -}}
+{{- if and $accessIDEmpty (not $secretKeyEmpty) -}}
 {{- fail "You provided an AWS Secret Key, but no Access Key ID. You must provide either both or neither." -}}
 {{- end }}
-{{- if and $accessIDNotEmpty $secretKeyEmpty -}}
+{{- if and (not $accessIDEmpty) $secretKeyEmpty -}}
 {{- fail "You provided an AWS Access Key ID, but no Secret Access Key. You must provide either both or neither." -}}
 {{- end -}}
-{{- and $accessIDNotEmpty $secretKeyNotEmpty -}}
+{{- not (and $accessIDEmpty $secretKeyEmpty) -}}
 {{- end -}}
