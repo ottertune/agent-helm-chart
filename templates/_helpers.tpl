@@ -64,8 +64,17 @@ Create the name of the service account to use
 {{/*
 Provides the name of the Configmap.
 */}}
-{{- define "ottertune-agent.configmapName" -}}
+{{- define "ottertune-agent.configmap-name" -}}
 {{ include "ottertune-agent.fullname" .}}-configmap
+{{- end }}
+
+{{/*
+Provides the name of the OtterTune-provided Secret. This
+template only writes out the default secret name. If the user
+provides an existing secret, use that secret name instead.
+*/}}
+{{- define "ottertune-agent.secret-name" -}}
+{{ include "ottertune-agent.fullname" .}}-secret
 {{- end }}
 
 {{/*

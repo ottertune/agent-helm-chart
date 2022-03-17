@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "ottertune-agent.configmapName" . | quote }}
+  name: {{ include "ottertune-agent.configmap-name" . | quote }}
   labels:
     {{- include "ottertune-agent.labels" . | nindent 4 }}
 data:
