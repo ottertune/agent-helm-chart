@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "ottertune-agent.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "ottertune-agent.labels" . | nindent 4 }}
 spec:
@@ -45,42 +46,45 @@ spec:
           - name: "OTTERTUNE_DB_IDENTIFIER"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "db-identifier"
           - name: "OTTERTUNE_DB_USERNAME"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "db-username"
           - name: "OTTERTUNE_DB_PASSWORD"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "db-password"
           - name: "OTTERTUNE_API_KEY"
-            value: {{ required "Must provide ottertuneAPIKey" .Values.ottertune.apiKey | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "ottertune-agent.secret-name" . | quote }}
+                key: "api-key"
           - name: "OTTERTUNE_DB_KEY"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "db-key"
           - name: "OTTERTUNE_ORG_ID"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "org-id"
   {{- if not (empty .Values.serverUrlOverride) }}
           - name: "OTTERTUNE_OVERRIDE_SERVER_URL"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "server-url"
   {{- end -}}
   {{- if not (empty .Values.ottertune.postgresDBName) }}
           - name: "POSTGRES_OTTERTUNE_DB_NAME"
             valueFrom:
               configMapKeyRef:
-                name: {{ include "ottertune-agent.configmapName" . }}
+                name: {{ include "ottertune-agent.configmap-name" . | quote }}
                 key: "postgres-db-name"
   {{- end -}}
       {{- with .Values.nodeSelector }}

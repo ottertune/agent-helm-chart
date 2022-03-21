@@ -64,8 +64,26 @@ Create the name of the service account to use
 {{/*
 Provides the name of the Configmap.
 */}}
-{{- define "ottertune-agent.configmapName" -}}
+{{- define "ottertune-agent.configmap-name" -}}
 {{ include "ottertune-agent.fullname" .}}-configmap
+{{- end }}
+
+{{/*
+This template provides the name of the Secret the agent will
+use to extract sensitive credentials. If the user does not provide
+an existing secret, this chart will use a default secret name, and
+inject sensitive credentials into that secret.
+*/}}
+{{- define "ottertune-agent.secret-name" -}}
+{{ default (include "ottertune-agent.secret-default-name" . ) .Values.ottertune.apiKeyExistingSecret -}}
+{{end}}
+
+{{/*
+Provides the default name of the OtterTune-provided Secret. If the user
+provides an existing secret, use that secret name instead.
+*/}}
+{{- define "ottertune-agent.secret-default-name" -}}
+{{ include "ottertune-agent.fullname" .}}-secret
 {{- end }}
 
 {{/*

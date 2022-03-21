@@ -20,6 +20,7 @@ ottertune:
   dbKey: ""
   orgID: ""
   postgresDBName: ""
+  apiKeyExistingSecret: ""
 
 imagePullSecrets: []
 nameOverride: ""
