@@ -12,7 +12,7 @@ jobs:
       - checkout
       - ot/install-taskfile
       - helm/install-helm-client:
-        version: v3.5.0
+        version: v3.8.1
       - run:
           name: Update Helm Deps
           command: helm dependency update
