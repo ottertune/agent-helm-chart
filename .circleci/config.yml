@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  helm: circleci/helm@1.2.0
+  ot: ottertune/ot-cci-orb@0.19.0
+
+jobs:
+  lint:
+    docker:
+      - image: circleci/base:2021.03
+    resource_class: small
+    steps:
+      - checkout
+      - ot/install-taskfile
+      - helm/install-helm-client:
+        version: v3.5.0
+      - run:
+          name: Update Helm Deps
+          command: helm dependency update
+      - run:
+          name: Lint Chart
+          command: task lint
+
+workflows:
+  main:
+    jobs:
+      - lint:
+          name: "Validate Build"

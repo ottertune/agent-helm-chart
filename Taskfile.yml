@@ -1,0 +1,39 @@
+version: "3"
+
+tasks:
+  template:
+    desc: "Template this chart for a given realm. USAGE: task template"
+    cmds:
+      - |
+        helm template . \
+        -f values.yaml
+
+  release:
+    desc: "Release this chart to a given realm. USAGE: task release RELEASE_NAME=ot-agent"
+    cmds:
+      - |
+        helm upgrade {{.RELEASE_NAME}} . \
+        -f values.yaml
+
+  dry-run:
+    desc: "Do a dry run of a release for this chart. USAGE: task release RELEASE_NAME=ot-agent"
+    cmds:
+      - |
+        helm upgrade --dry-run {{.RELEASE_NAME}} . \
+        -f values.yaml
+
+  install:
+    desc: "Install this chart to a given realm. USAGE: task install RELEASE_NAME=ot-agent"
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} . \
+        -f values.yaml
+
+  lint:
+    desc: Lint Chart
+    cmds:
+      - echo "Installing dependencies for OT Agent chart"
+      - helm dependency update
+      - echo 'Dependencies installed. Linting'
+      - echo "Lint Agent Chart"
+      - helm lint --strict . -f values.yaml
