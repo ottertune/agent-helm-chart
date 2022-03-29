@@ -12,7 +12,7 @@ jobs:
       - checkout
       - ot/install-taskfile
       - helm/install-helm-client:
-        version: v3.8.1
+          version: v3.8.1
       - run:
           name: Lint Chart
           command: task lint
