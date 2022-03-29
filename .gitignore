@@ -1,0 +1,4 @@
+charts/
+env/
+.cr-index/
+.cr-release-packages/
