@@ -14,9 +14,6 @@ jobs:
       - helm/install-helm-client:
         version: v3.8.1
       - run:
-          name: Update Helm Deps
-          command: helm dependency update
-      - run:
           name: Lint Chart
           command: task lint
 
