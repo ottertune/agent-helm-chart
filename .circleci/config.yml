@@ -65,8 +65,8 @@ workflows:
     jobs:
       - lint:
           name: "Validate Build"
-      - lint-release:
-          name: "Validate Build"
+      - lint:
+          name: "Validate Release Build"
           filters:
             branches:
               ignore: /.*/
