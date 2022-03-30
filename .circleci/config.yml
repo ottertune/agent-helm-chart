@@ -47,10 +47,10 @@ jobs:
           command: "cr package"
       - run:
           name: "Package the Chart"
-          command: "cr upload"
+          command: "cr upload --token ${GITHUB_TOKEN}"
       - run:
           name: "Update the Index"
-          command: "cr index"
+          command: "cr index --token ${GITHUB_TOKEN}"
       # Rather than curling and installing the CR command directly,
       # we download a pre-built container with the CR command installed.
       # Then, we add our files to the container image and cut the release
