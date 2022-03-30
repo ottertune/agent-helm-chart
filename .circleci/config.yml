@@ -27,12 +27,15 @@ jobs:
       CR_GIT_REPO: "agent-helm-chart"
       CR_PAGES_BRANCH: "main"
       CR_PR: true
-      CR_PAGES_INDEX_PATH: "docs/index.yaml"
-      CR_INDEX_PATH: "docs/index.yaml"
+      # CR_PAGES_INDEX_PATH: "docs/index.yaml"
+      # CR_INDEX_PATH: "docs/index.yaml"
 
     steps:
       - checkout
       - github/setup
+      - run:
+          name: Configure git identitiy.
+          command: git config --global user.name "CircleCI" && git config --global user.email "eng@ottertune.com"
       - run:
           name: "Install Chart Releaser"
           command: |
