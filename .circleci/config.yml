@@ -76,7 +76,7 @@ workflows:
           name: "Release Chart"
           context: "GitHub CLI"
           requires:
-            - "Validate Build"
+            - "Validate Release Build"
           filters:
             branches:
               ignore: /.*/
