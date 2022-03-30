@@ -1,0 +1,84 @@
+version: 2.1
+orbs:
+  github: circleci/github-cli@1.0.3
+  helm: circleci/helm@1.2.0
+  ot: ottertune/ot-cci-orb@0.24.0
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/base:2021.03 
+    resource_class: small
+    steps:
+      - checkout
+      - ot/install-taskfile
+      - helm/install-helm-client:
+          version: v3.8.1
+      - run:
+          name: Lint Chart
+          command: task lint
+
+  release-chart:
+    docker:
+      - image: cimg/base:2021.03 
+    resource_class: small
+    environment:
+      CR_OWNER: "ottertune"
+      CR_GIT_REPO: "agent-helm-chart"
+      CR_PAGES_BRANCH: "main"
+      CR_PAGES_INDEX_PATH: "docs/index.yaml"
+      CR_INDEX_PATH: "docs/index.yaml"
+
+    steps:
+      - checkout
+      - github/setup
+      - run:
+          name: Configure git identitiy.
+          command: git config --global user.name "CircleCI" && git config --global user.email "eng@ottertune.com"
+      - run:
+          name: "Install Chart Releaser"
+          command: |
+            cd /tmp/
+            curl -s -L https://github.com/helm/chart-releaser/releases/download/v1.4.0/chart-releaser_1.4.0_linux_amd64.tar.gz | tar -xz
+            sudo mv cr /usr/local/bin
+      - run:
+          name: "Create the Index Directory"
+          command: "mkdir .cr-index"
+      - run:
+          name: "Package the Chart"
+          command: "cr package"
+      - run:
+          name: "Upload the Chart"
+          command: "cr upload --token ${GITHUB_TOKEN}"
+      - run:
+          name: "Update the Index"
+          command: "cr index"
+      - run:
+          name: "Commit Changes to Index File"
+          command: "git commit --all -m 'Update Helm Index.'"
+      - run:
+          name: "Push to Remote"
+          command: "git push origin main"
+
+workflows:
+  main:
+    jobs:
+      - lint:
+          name: "Validate Build"
+      - lint:
+          name: "Validate Release Build"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
+      - release-chart:
+          name: "Release Chart"
+          context: "GitHub CLI"
+          requires:
+            - "Validate Release Build"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
