@@ -1,7 +1,8 @@
 version: 2.1
 orbs:
+  github: circleci/github-cli@1.0.3
   helm: circleci/helm@1.2.0
-  ot: ottertune/ot-cci-orb@0.19.0
+  ot: ottertune/ot-cci-orb@0.24.0
 
 jobs:
   lint:
@@ -17,8 +18,75 @@ jobs:
           name: Lint Chart
           command: task lint
 
+  release-chart:
+    docker:
+      - image: cimg/base:2021.03 
+    resource_class: small
+    environment:
+      CR_OWNER: "ottertune"
+      CR_GIT_REPO: "agent-helm-chart"
+      CR_PAGES_BRANCH: "main"
+      CR_PR: true
+      CR_PAGES_INDEX_PATH: "docs/index.yaml"
+      CR_INDEX_PATH: "docs/index.yaml"
+
+    steps:
+      - checkout
+      - github/setup
+      - run:
+          name: "Install Chart Releaser"
+          command: |
+            cd /tmp/
+            curl -s -L https://github.com/helm/chart-releaser/releases/download/v1.4.0/chart-releaser_1.4.0_linux_amd64.tar.gz | tar -xz
+            sudo mv cr /usr/local/bin
+      - run:
+          name: "Package the Chart"
+          command: "cr package"
+      - run:
+          name: "Package the Chart"
+          command: "cr upload"
+      - run:
+          name: "Update the Index"
+          command: "cr index"
+      # Rather than curling and installing the CR command directly,
+      # we download a pre-built container with the CR command installed.
+      # Then, we add our files to the container image and cut the release
+      # from within the container.
+      #- run:
+      #    name: "Install Chart Releaser"
+      #    command: docker pull quay.io/helmpack/chart-releaser:v1.4.0
+      #- run:
+      #    name: "Build Dockerfile"
+      #    command: |
+      #      echo 
+      #- run:
+      #    name: "Package and Release Chart"
+      #    command: |
+            # TODO: Move the content from this repository into the mounted Docker image.
+            # TODO: Convert these commands into Docker commands.
+            # TODO: Get the Token information for CCI and inject it.
+            # TODO: Use a config file or environment variables instead of params.
+            # TODO: Add filters to ignore pushes. Only releases.
+            # TODO: Confirm this works by cutting a release.
+            #      cr package
+            #cr upload \
+            #  --owner ottertune
+            #  --git-repo agent-helm-chart
+            #cr index \
+            #  --owner ottertune \
+            #  --git-repo agent-helm-chart \
+            #  --pages-branch main \
+            #  --push \
+            #  --pages-index-path "docs/index.yaml"
+            #  --index-path "docs/index.yaml"
+
 workflows:
   main:
     jobs:
       - lint:
           name: "Validate Build"
+      - release-chart:
+          name: "Release Chart"
+          context: "GitHub CLI"
+          requires:
+            - "Validate Build"
