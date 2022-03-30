@@ -49,7 +49,7 @@ jobs:
           name: "Package the Chart"
           command: "cr package"
       - run:
-          name: "Package the Chart"
+          name: "Upload the Chart"
           command: "cr upload --token ${GITHUB_TOKEN}"
       - run:
           name: "Update the Index"
