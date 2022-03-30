@@ -26,9 +26,8 @@ jobs:
       CR_OWNER: "ottertune"
       CR_GIT_REPO: "agent-helm-chart"
       CR_PAGES_BRANCH: "main"
-      # CR_PUSH: true
       CR_PAGES_INDEX_PATH: "docs/index.yaml"
-      # CR_INDEX_PATH: "docs/index.yaml"
+      CR_INDEX_PATH: "docs/index.yaml"
 
     steps:
       - checkout
@@ -53,9 +52,13 @@ jobs:
           command: "cr upload --token ${GITHUB_TOKEN}"
       - run:
           name: "Update the Index"
-          command: "cr index --token ${GITHUB_TOKEN}"
-          # TODO: Add filters to ignore pushes. Only releases.
-          # TODO: Confirm this works by cutting a release.
+          command: "cr index"
+      - run:
+          name: "Commit Changes to Index File"
+          command: "git commit --all -m 'Update Helm Index.'"
+      - run:
+          name: "Push to Remote"
+          command: "git push origin main"
 
 workflows:
   main:
@@ -67,3 +70,8 @@ workflows:
           context: "GitHub CLI"
           requires:
             - "Validate Build"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
