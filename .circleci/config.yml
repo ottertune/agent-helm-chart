@@ -65,6 +65,13 @@ workflows:
     jobs:
       - lint:
           name: "Validate Build"
+      - lint-release:
+          name: "Validate Build"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-.*/
       - release-chart:
           name: "Release Chart"
           context: "GitHub CLI"
