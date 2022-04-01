@@ -8,6 +8,7 @@
 | aws.accessKeyID                       | String  | ""                               | An AWS Access Key ID allowing RDS access. If enabled, you must also provide `aws.secretAccessKey`. Only required if you are not providing credentials via a ServiceAccount or `ottertune.apiKeyExistingSecret` |
 | aws.secretAccessKey                   | String  | ""                               | An AWS Secret Access Key allowing RDS access. If enabled, you must also provide `aws.accessKeyID` |
 | ottertune.dbIdentifier                | String  | ""                               | **Required:** The AWS identifier for the database you want to monitor. This is the name of the RDS instance. |
+| ottertune.dbUsername                  | String  | ""                               | The name of the database user that the agent will use to connect to the database. |
 | ottertune.dbPassword                  | String  | ""                               | The password of the database user that the agent will use to connect to the database. |
 | ottertune.apiKey                      | String  | ""                               | **Required**, if `ottertune.apiKeyExistingSecret` is not enabled. The OtterTune API Key assigned to your organization. This value is mutually exclusive with `ottertune.apiKeyExistingSecret`. |
 | ottertune.dbKey                       | String  | ""                               | A unique UUID provided by OtterTune, used to identify this database. |
@@ -29,4 +30,3 @@
 | serverUrlOverride                     | String  | ""                               | On-prem customers only. If you need to change the URL of the OtterTune SaaS, you can override that value here. |
 | replicaCount                          | Number  | 1                                | Please do not edit this value. The agent only supports 1 replica at this time. |
 
-dbUsername: ""
