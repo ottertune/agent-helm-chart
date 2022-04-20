@@ -96,7 +96,18 @@ helm install my-release ottertune/ottertune-agent \
 
 ### Eliding AWS Credentials
 
-**This is highy recommended.** You can omit `aws.accessKeyID` and `aws.secretAccessKey` by providing a `ServiceAccount` annotation with a IAM role granting database access. AWS [offers](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)  to attach IAM roles to Kubernetes `ServiceAccount`s. This allows the OtterTune Agent to connect to AWS RDS, eliminating the need to inject credentials into the Agent's container via environment variables. To do this, you must edit the deployment manifest to use a Kubernetes `ServiceAccount` with the appropriate IAM role. [See the OtterTune docmentation for more](https://docs.ottertune.com/info/connect-your-database-to-ottertune/add-database/agent). 
+**This is highy recommended.** You can omit `aws.accessKeyID` and `aws.secretAccessKey` by providing a `ServiceAccount` annotation with a IAM role granting database access. AWS [offers](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)  to attach IAM roles to Kubernetes `ServiceAccount`s. This allows the OtterTune Agent to connect to AWS RDS, eliminating the need to inject credentials into the Agent's container via environment variables. You should ensure that the role has the following [permissions](https://docs.ottertune.com/info/connect-your-database-to-ottertune/add-database/agent#policies).
+
+For example, if you have an IAM Role OTAgentRole, and the ARN is arn:aws:iam::123456789:role/OTAgentRole, then you should update your `my-values.yaml` file with the following block:
+
+```yaml
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789:role/OTAgentRole
+    name: OTAgentServiceAccount
+```
+
+This will ensure that the agent uses this service account which should give it the necessary IAM permissions.
 
 ## Contributing
 
