@@ -10,5 +10,5 @@ entries:
     type: application
     urls:
     - https://github.com/ottertune/agent-helm-chart/releases/download/ottertune-agent-0.1.4/ottertune-agent-0.1.4.tgz
-    version: 0.1.4
+    version: 0.1.6
 generated: "2022-03-30T09:06:00.134855-04:00"
