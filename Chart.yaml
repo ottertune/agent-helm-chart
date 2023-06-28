@@ -3,5 +3,5 @@ name: ottertune-agent
 description: "This chart installs the OtterTune Agent into a Kubernetes cluster."
 type: application
 version: 0.1.6
-appVersion: "0.4.4"
+appVersion: "0.4.5"
 icon: https://ottertune.com/favicon.ico
